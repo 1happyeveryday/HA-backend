@@ -1,5 +1,6 @@
 package com.yupi.project.service;
 
+import com.rmh.project.service.UserInterfaceInfoService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
