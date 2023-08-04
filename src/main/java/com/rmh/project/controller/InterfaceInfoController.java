@@ -15,7 +15,9 @@ import com.rmh.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.rmh.project.model.enums.InterfaceInfoStatusEnum;
 import com.rmh.project.service.InterfaceInfoService;
 import com.rmh.project.service.UserService;
-import com.yupi.yuapiclientsdk.client.YuApiClient;
+//import com.yupi.yuapiclientsdk.client.YuApiClient;
+import com.rmh.rmhclientsdk.client.YuApiClient;
+import com.rmh.rmhclientsdk.client.YuApiClient;
 import com.rmh.yuapicommon.model.entity.InterfaceInfo;
 import com.rmh.yuapicommon.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -222,7 +224,7 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 判断该接口是否可以调用
-        com.yupi.yuapiclientsdk.model.User user = new com.yupi.yuapiclientsdk.model.User();
+        com.rmh.rmhclientsdk.model.User user = new com.rmh.rmhclientsdk.model.User();
         user.setUsername("test");
         String username = yuApiClient.getUsernameByPost(user);
         if (StringUtils.isBlank(username)) {
@@ -292,7 +294,7 @@ public class InterfaceInfoController {
         String secretKey = loginUser.getSecretKey();
         YuApiClient tempClient = new YuApiClient(accessKey, secretKey);
         Gson gson = new Gson();
-        com.yupi.yuapiclientsdk.model.User user = gson.fromJson(userRequestParams, com.yupi.yuapiclientsdk.model.User.class);
+        com.rmh.rmhclientsdk.model.User user = gson.fromJson(userRequestParams, com.rmh.rmhclientsdk.model.User.class);
         String usernameByPost = tempClient.getUsernameByPost(user);
         return ResultUtils.success(usernameByPost);
     }
