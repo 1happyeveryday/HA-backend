@@ -3,10 +3,11 @@ package com.rmh.project.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
+import com.hua.client.HuaApiClient;
 import com.rmh.project.annotation.AuthCheck;
 import com.rmh.project.common.*;
 import com.rmh.project.exception.BusinessException;
-import com.rmh.project.common.*;
+
 import com.rmh.project.constant.CommonConstant;
 import com.rmh.project.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import com.rmh.project.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
@@ -15,9 +16,7 @@ import com.rmh.project.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import com.rmh.project.model.enums.InterfaceInfoStatusEnum;
 import com.rmh.project.service.InterfaceInfoService;
 import com.rmh.project.service.UserService;
-//import com.yupi.yuapiclientsdk.client.YuApiClient;
-import com.rmh.rmhclientsdk.client.YuApiClient;
-import com.rmh.rmhclientsdk.client.YuApiClient;
+
 import com.rmh.yuapicommon.model.entity.InterfaceInfo;
 import com.rmh.yuapicommon.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,9 @@ public class InterfaceInfoController {
     private UserService userService;
 
     @Resource
-    private YuApiClient yuApiClient;
+    private HuaApiClient huaApiClient;
+
+
 
     // region 增删改查
 
@@ -224,9 +225,10 @@ public class InterfaceInfoController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         // 判断该接口是否可以调用
-        com.rmh.rmhclientsdk.model.User user = new com.rmh.rmhclientsdk.model.User();
+        com.hua.model.User user = new com.hua.model.User();
         user.setUsername("test");
-        String username = yuApiClient.getUsernameByPost(user);
+        String username = huaApiClient.getUsernameByPost(user);
+//        String username = yuApiClient.getUsernameByPost(user);
         if (StringUtils.isBlank(username)) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口验证失败");
         }
@@ -292,9 +294,10 @@ public class InterfaceInfoController {
         User loginUser = userService.getLoginUser(request);
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
-        YuApiClient tempClient = new YuApiClient(accessKey, secretKey);
+        HuaApiClient tempClient = new HuaApiClient(accessKey, secretKey);
+
         Gson gson = new Gson();
-        com.rmh.rmhclientsdk.model.User user = gson.fromJson(userRequestParams, com.rmh.rmhclientsdk.model.User.class);
+        com.hua.model.User user = gson.fromJson(userRequestParams, com.hua.model.User.class);
         String usernameByPost = tempClient.getUsernameByPost(user);
         return ResultUtils.success(usernameByPost);
     }
